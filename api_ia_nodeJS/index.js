@@ -16,6 +16,16 @@ faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 const MODEL_URL = './models';
 const faceExpressionNet = faceapi.nets.faceExpressionNet;
 
+const emotionTranslations = {
+  neutral: 'Neutral',
+  happy: 'Feliz',
+  sad: 'Triste',
+  angry: 'Enojado',
+  fearful: 'Asustado',
+  disgusted: 'Disgustado',
+  surprised: 'Sorprendido'
+};
+
 Promise.all([
   faceExpressionNet.loadFromDisk(MODEL_URL),
   faceapi.nets.ssdMobilenetv1.loadFromDisk(MODEL_URL) // Cargar el modelo SsdMobilenetv1 antes de realizar inferencias
@@ -53,7 +63,10 @@ function startServer() {
       res.status(400).json({ error: 'No se detectó ninguna cara en la imagen.' });
     } else {
       const emotions = detections.expressions;
-      res.json({ emotions });
+      // Obtengo el valor mas alto y lo traduzco al español
+      const highestEmotion = Object.keys(emotions).reduce((a, b) => emotions[a] > emotions[b] ? a : b);
+      const translatedEmotion = emotionTranslations[highestEmotion] || highestEmotion;
+      res.json({ emotions: [translatedEmotion] });
     }
   });
 }
