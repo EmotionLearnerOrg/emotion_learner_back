@@ -1,13 +1,11 @@
-# Emotion_detection_with_CNN
-
-![emotion_detection](https://github.com/datamagic2020/Emotion_detection_with_CNN/blob/main/emoition_detection.png)
-
+###### Emotion_detection_with_CNN ######
 ### Packages need to be installed
 - pip install numpy
 - pip install opencv-python
 - pip install keras
 - pip3 install --upgrade tensorflow
 - pip install pillow
+- pip install -r requirements.txt
 
 ### download FER2013 dataset
 - from below link and put in data folder under your project directory
@@ -26,3 +24,6 @@ copy these two files create model folder in your project directory and paste it.
 
 ### run your emotion detection test file
 python TestEmotionDetector.py
+
+### run your server emotion detection
+python Server.py
