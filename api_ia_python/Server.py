@@ -39,9 +39,7 @@ def detect_emotion():
         cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
         emotion_prediction = emotion_model.predict(cropped_img)
         maxindex = int(np.argmax(emotion_prediction))
-        emotions.append(emotion_dict[maxindex])
-
-    return jsonify({'emotions': emotions}), 200
+        return jsonify({'emotion': emotion_dict[maxindex]}), 200
 
 if __name__ == '__main__':
     http_server = WSGIServer(('0.0.0.0', 3001), app)
