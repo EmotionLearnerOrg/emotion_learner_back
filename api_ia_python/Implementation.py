@@ -7,7 +7,7 @@ import time
 
 def detect_emotions_in_image(path_image):
 
-    emotion_dict = {0: "Enojado", 1: "Disgustado", 2: "Disgustado", 3: "Feliz", 4: "Neutral", 5: "Triste", 6: "Sorprendido"}
+    emotion_dict = {0: "Enojo", 1: "Tristeza", 2: "Tristeza", 3: "Alegria", 4: "Calma", 5: "Tristeza", 6: "Sorpresa"}
 
     # load json and create model
     json_file = open('model/emotion_model.json', 'r')

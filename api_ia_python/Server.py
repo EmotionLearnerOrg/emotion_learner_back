@@ -15,7 +15,7 @@ emotion_model = model_from_json(loaded_model_json)
 emotion_model.load_weights("model/emotion_model.h5")
 print("Modelo cargado correctamente")
 
-emotion_dict = {0: "Enojado", 1: "Triste", 2: "Triste", 3: "Feliz", 4: "Neutral", 5: "Triste", 6: "Sorprendido"}
+emotion_dict = {0: "Enojo", 1: "Tristeza", 2: "Tristeza", 3: "Alegria", 4: "Calma", 5: "Tristeza", 6: "Sorpresa"}
 # emotion_dict = {0: "Enojado", 1: "Disgustado", 2: "Disgustado", 3: "Feliz", 4: "Neutral", 5: "Triste", 6: "Sorprendido"}
 
 @app.route('/detect-emotion', methods=['POST'])
