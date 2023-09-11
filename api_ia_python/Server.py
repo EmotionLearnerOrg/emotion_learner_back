@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 
-# A modo de testing, guardo las imagenes procesadas por la api (Descomentarlo) -> Lineas 13,14,15,77,78,79
+# A modo de testing, guardo las imagenes procesadas por la api (Descomentarlo) -> Lineas 13,14,15,54,55,56,77,78,79
 # UPLOAD_FOLDER = 'D:/Hola Mundo/Proyectos/mi_mundo_emocional/mi_mundo_emocional_back/imagenes_procesadas'
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -51,9 +51,9 @@ def detect_emotions():
         if len(faces) == 0:
             results[f'emotion_{index + 1}'] = 'No se detectó ninguna cara en la imagen.'
             # Guarda la imagen sin cara en el servidor
-            no_face_image_path = os.path.join(
-                app.config['UPLOAD_FOLDER'], f'no_face_image_{index + 1}.jpg')
-            img.save(no_face_image_path)
+            # no_face_image_path = os.path.join(
+            #     app.config['UPLOAD_FOLDER'], f'no_face_image_{index + 1}.jpg')
+            # img.save(no_face_image_path)
         else:
             emotions = []
 
