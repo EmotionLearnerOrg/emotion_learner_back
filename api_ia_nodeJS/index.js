@@ -4,7 +4,6 @@ const faceapi = require('face-api.js');
 const multer = require('multer');
 const { Canvas, Image, ImageData } = canvas;
 
-
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -60,14 +59,17 @@ function startServer() {
   });
 }
 
-const maxImageCount = 20;
-app.use('/detect-emotion', upload.array('images', maxImageCount));
+app.use('/detect-emotion', upload.array('images', 15));
 app.post('/detect-emotion', async (req, res) => {
-  const images = req.files;
 
+  const images = req.files;
   if (!images || images.length === 0) {
-    return res.status(400).json({ error: 'No se han enviado imágenes' });
+    return res.status(405).json({ error: 'No se han enviado imágenes' });
   }
+
+  const emotionPredictionStr = req.body.emotionPrediction;
+  const percentage = parseInt(req.body.percentage);
+  const consecutiveRecognition = parseInt(req.body.consecutiveRecognitionSuccess);
 
   try {
     const emotionsResponses = {};
@@ -90,13 +92,51 @@ app.post('/detect-emotion', async (req, res) => {
         const highestEmotion = Object.keys(emotions).reduce((a, b) => (emotions[a] > emotions[b] ? a : b));
         imageResult.emotion = emotionTranslations[highestEmotion] || highestEmotion;
       }
-
       emotionsResponses[`emotion_${i + 1}`] = imageResult.emotion;
     }
 
-    res.json(emotionsResponses);
+    const feasibilityResult = analyzeFeasibility(emotionPredictionStr, emotionsResponses, percentage, consecutiveRecognition);
+    res.json(feasibilityResult);
   } catch (error) {
     console.error('Error al cargar o procesar las imágenes:', error);
-    return res.status(500).json({ error: 'Error al procesar las imágenes.' });
+    return res.status(505).json({ error: 'Error al procesar las imágenes.' });
   }
 });
+
+function analyzeFeasibility(emotionPredictionStr, results, percentage, consecutiveRecognition) {
+  let numberOfHits = 0;
+  let reliability = 0.0;
+  let consecutiveEmotions = 0; // Contador de emociones consecutivas
+
+  // Primer criterio: Obtener una fiabilidad del x%
+  for (const key in results) {
+    const emotion = results[key];
+    if (emotionPredictionStr.toLowerCase() === emotion.toLowerCase()) {
+      numberOfHits += 1;
+    }
+  }
+  reliability = (numberOfHits / Object.keys(results).length) * 100;
+
+  // Segundo criterio: Obtener una x cantidad de aciertos consecutivos
+  for (const key in results) {
+    const emotion = results[key];
+    if (emotionPredictionStr.toLowerCase() === emotion.toLowerCase()) {
+      consecutiveEmotions += 1;
+      if (consecutiveEmotions >= consecutiveRecognition) {
+        break;
+      }
+    } else {
+      consecutiveEmotions = 0;
+    }
+  }
+
+  const response_data = {
+    success: reliability > percentage || consecutiveEmotions >= consecutiveRecognition,
+    reliability: parseFloat(reliability.toFixed(2)),
+    consecutive_recognition: consecutiveEmotions,
+    emotion_prediction: emotionPredictionStr,
+    results: results
+  };
+
+  return response_data;
+}
