@@ -3,6 +3,8 @@ const canvas = require('canvas');
 const faceapi = require('face-api.js');
 const multer = require('multer');
 const { Canvas, Image, ImageData } = canvas;
+const fs = require('fs');
+const https = require('https');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -54,7 +56,10 @@ Promise.all([
   });
 
 function startServer() {
-  app.listen(port, () => {
+  https.createServer({
+    cert: fs.readFileSync('./emotion-learner.crt'),
+    key: fs.readFileSync('./emotion-learner.key')
+  }, app).listen(port, () => {
     console.log(`El servidor está escuchando en el puerto ${port}`);
   });
 }
