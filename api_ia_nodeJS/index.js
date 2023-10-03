@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const canvas = require('canvas');
 const faceapi = require('face-api.js');
@@ -75,6 +77,21 @@ app.post('/detect-emotion', async (req, res) => {
     const emotionsResponses = {};
 
     for (let i = 0; i < images.length; i++) {
+      ///Optativo para guardarlas en la carpeta 'imagenes_procesadas'////////////////////////
+      if (false) {
+        try {
+          const fileName = `image_${Date.now()}_${i}.jpg`;
+          const folderPath = path.join(__dirname, 'imagenes_procesadas');
+          const filePath = path.join(folderPath, fileName);
+          if (!fs.existsSync(folderPath)) {
+            fs.mkdirSync(folderPath, { recursive: true });
+          }
+          fs.writeFileSync(filePath, imageBuffer);
+        } catch (error) {
+          console.error('Error al guardar la imagen:', error);
+        }
+      }
+      //////////////////////////////////////////////////////////////////////////////////////
       const image = images[i];
       const imageBuffer = image.buffer;
       const imageResult = {};
