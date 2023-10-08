@@ -77,6 +77,12 @@ app.post('/detect-emotion', async (req, res) => {
     const emotionsResponses = {};
 
     for (let i = 0; i < images.length; i++) {
+      const image = images[i];
+      const imageBuffer = image.buffer;
+      const imageResult = {};
+      const img = new Image();
+      img.src = imageBuffer;
+
       ///Optativo para guardarlas en la carpeta 'imagenes_procesadas'////////////////////////
       if (false) {
         try {
@@ -92,12 +98,6 @@ app.post('/detect-emotion', async (req, res) => {
         }
       }
       //////////////////////////////////////////////////////////////////////////////////////
-      const image = images[i];
-      const imageBuffer = image.buffer;
-      const imageResult = {};
-
-      const img = new Image();
-      img.src = imageBuffer;
 
       // Detección de emociones
       const detections = await faceapi.detectSingleFace(img).withFaceExpressions();
