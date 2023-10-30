@@ -74,6 +74,7 @@ app.post('/detect-emotion', async (req, res) => {
   const consecutiveRecognition = parseInt(req.body.consecutiveRecognitionSuccess);
 
   try {
+    console.log('Post: ', emotionPredictionStr);
     const emotionsResponses = {};
 
     for (let i = 0; i < images.length; i++) {
@@ -113,6 +114,8 @@ app.post('/detect-emotion', async (req, res) => {
     }
 
     const feasibilityResult = analyzeFeasibility(emotionPredictionStr, emotionsResponses, percentage, consecutiveRecognition);
+    console.log('Resultado: ', feasibilityResult.success);
+    console.log('==================');
     res.json(feasibilityResult);
   } catch (error) {
     console.error('Error al cargar o procesar las imágenes:', error);
