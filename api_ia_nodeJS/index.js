@@ -57,7 +57,7 @@ Promise.all([
 
 function startServer() {
   app.listen(port, () => {
-    console.log(`El servidor está escuchando en el puerto ${port}`);
+    console.log(`El servidor está escuchando en el puerto ${port}\n============================`);
   });
 }
 
